@@ -1,0 +1,8 @@
+## .NET
+bin/
+obj/
+*.user
+.vs/
+
+## Resultados gerados em tempo de execução (mantém a pasta, ignora os CSVs)
+data/results/*.csv

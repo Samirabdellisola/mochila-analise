@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Knapsack.Core\Knapsack.Core.csproj" />
+    <ProjectReference Include="..\Knapsack.Analysis\Knapsack.Analysis.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.4" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <!-- SkiaSharp/OpenTK (deps do LiveCharts2) sao publicados para .NETFramework; o restore funciona em net8.0-windows. -->
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
+  </PropertyGroup>
+
+</Project>
