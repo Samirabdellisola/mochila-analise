@@ -55,8 +55,10 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<AlgorithmRowViewModel> algorithmRows = new();
     [ObservableProperty] private ISeries[] utilitySeries = Array.Empty<ISeries>();
     [ObservableProperty] private Axis[] utilityXAxes = Array.Empty<Axis>();
+    [ObservableProperty] private Axis[] utilityYAxes = Array.Empty<Axis>();
     [ObservableProperty] private ISeries[] timeSeries = Array.Empty<ISeries>();
     [ObservableProperty] private Axis[] timeXAxes = Array.Empty<Axis>();
+    [ObservableProperty] private Axis[] timeYAxes = Array.Empty<Axis>();
 
     // --- Experimentos / escalabilidade ---
     [ObservableProperty] private int expStartN = 5;
@@ -66,8 +68,10 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private CapacityMode expCapacityMode = CapacityMode.Medium;
     [ObservableProperty] private ISeries[] timeVsNSeries = Array.Empty<ISeries>();
     [ObservableProperty] private Axis[] timeVsNXAxes = Array.Empty<Axis>();
+    [ObservableProperty] private Axis[] timeVsNYAxes = Array.Empty<Axis>();
     [ObservableProperty] private ISeries[] errorVsNSeries = Array.Empty<ISeries>();
     [ObservableProperty] private Axis[] errorVsNXAxes = Array.Empty<Axis>();
+    [ObservableProperty] private Axis[] errorVsNYAxes = Array.Empty<Axis>();
 
     // --- Testes ---
     [ObservableProperty] private string testSummary = "Os testes ainda nao foram executados.";
@@ -202,15 +206,17 @@ public partial class MainViewModel : ObservableObject
             AlgorithmRows = new ObservableCollection<AlgorithmRowViewModel>(
                 solutions.Select(s => new AlgorithmRowViewModel(s, optimal)));
 
-            var (uSeries, uAxes) = ChartFactory.Columns(
+            var (uSeries, uxAxes, uyAxes) = ChartFactory.Columns(
                 solutions.Select(s => (s.AlgorithmName, (double)s.TotalUtility)).ToList());
             UtilitySeries = uSeries;
-            UtilityXAxes = uAxes;
+            UtilityXAxes = uxAxes;
+            UtilityYAxes = uyAxes;
 
-            var (tSeries, tAxes) = ChartFactory.Columns(
+            var (tSeries, txAxes, tyAxes) = ChartFactory.Columns(
                 solutions.Select(s => (s.AlgorithmName, s.ElapsedMilliseconds)).ToList());
             TimeSeries = tSeries;
-            TimeXAxes = tAxes;
+            TimeXAxes = txAxes;
+            TimeYAxes = tyAxes;
 
             StatusMessage = optimal is null
                 ? $"{solutions.Count} algoritmo(s) executado(s). (Otimo nao calculado.)"
@@ -247,13 +253,15 @@ public partial class MainViewModel : ObservableObject
 
             _lastExperimentResults = result.AllResults;
 
-            var (timeSeries, timeAxes) = ChartFactory.Lines(nValues, result.TimeSeriesData, "n (itens)");
+            var (timeSeries, timeXAxes, timeYAxes) = ChartFactory.Lines(nValues, result.TimeSeriesData, "n (itens)");
             TimeVsNSeries = timeSeries;
-            TimeVsNXAxes = timeAxes;
+            TimeVsNXAxes = timeXAxes;
+            TimeVsNYAxes = timeYAxes;
 
-            var (errorSeries, errorAxes) = ChartFactory.Lines(nValues, result.ErrorSeriesData, "n (itens)");
+            var (errorSeries, errorXAxes, errorYAxes) = ChartFactory.Lines(nValues, result.ErrorSeriesData, "n (itens)");
             ErrorVsNSeries = errorSeries;
-            ErrorVsNXAxes = errorAxes;
+            ErrorVsNXAxes = errorXAxes;
+            ErrorVsNYAxes = errorYAxes;
 
             StatusMessage = $"Experimentos concluidos: {result.AllResults.Count} execucoes. Use 'Exportar CSV' para salvar.";
         }
@@ -307,6 +315,36 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
+    [RelayCommand]
+    private void ResetComparisonZoom()
+    {
+        ResetZoom(UtilityXAxes, UtilityYAxes, TimeXAxes, TimeYAxes);
+        StatusMessage = "Zoom dos graficos de comparacao reiniciado.";
+    }
+
+    [RelayCommand]
+    private void ResetExperimentsZoom()
+    {
+        ResetZoom(TimeVsNXAxes, TimeVsNYAxes, ErrorVsNXAxes, ErrorVsNYAxes);
+        StatusMessage = "Zoom dos graficos de experimentos reiniciado.";
+    }
+
+    /// <summary>
+    /// Volta os eixos ao enquadramento automatico (limites nulos). Necessario
+    /// porque os graficos usam o modo NoFit, que nao reposiciona sozinho.
+    /// </summary>
+    private static void ResetZoom(params Axis[][] axesGroups)
+    {
+        foreach (var axes in axesGroups)
+        {
+            foreach (var axis in axes)
+            {
+                axis.MinLimit = null;
+                axis.MaxLimit = null;
+            }
+        }
+    }
+
     private void SetInstance(KnapsackInstance instance)
     {
         _currentInstance = instance;
@@ -318,6 +356,10 @@ public partial class MainViewModel : ObservableObject
         AlgorithmRows = new ObservableCollection<AlgorithmRowViewModel>();
         UtilitySeries = Array.Empty<ISeries>();
         TimeSeries = Array.Empty<ISeries>();
+        UtilityXAxes = Array.Empty<Axis>();
+        UtilityYAxes = Array.Empty<Axis>();
+        TimeXAxes = Array.Empty<Axis>();
+        TimeYAxes = Array.Empty<Axis>();
     }
 
     private static ScalabilityResult RunScalability(

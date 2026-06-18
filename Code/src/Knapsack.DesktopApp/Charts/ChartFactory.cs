@@ -15,7 +15,7 @@ public static class ChartFactory
     /// Grafico de colunas comparando um valor por algoritmo (ex.: utilidade ou tempo).
     /// Cada algoritmo vira uma serie propria para ganhar cor e legenda.
     /// </summary>
-    public static (ISeries[] Series, Axis[] XAxes) Columns(IReadOnlyList<(string Algorithm, double Value)> data)
+    public static (ISeries[] Series, Axis[] XAxes, Axis[] YAxes) Columns(IReadOnlyList<(string Algorithm, double Value)> data)
     {
         var labels = data.Select(d => AlgorithmPalette.ShortName(d.Algorithm)).ToArray();
         var series = new List<ISeries>(data.Count);
@@ -39,14 +39,15 @@ public static class ChartFactory
         }
 
         var xAxis = new Axis { Labels = labels };
-        return (series.ToArray(), new[] { xAxis });
+        var yAxis = new Axis();
+        return (series.ToArray(), new[] { xAxis }, new[] { yAxis });
     }
 
     /// <summary>
     /// Grafico de linhas (escalabilidade): uma serie por algoritmo ao longo
     /// dos valores de n. Valores nulos viram lacunas (ex.: exato em n grande).
     /// </summary>
-    public static (ISeries[] Series, Axis[] XAxes) Lines(
+    public static (ISeries[] Series, Axis[] XAxes, Axis[] YAxes) Lines(
         IReadOnlyList<int> nValues,
         IReadOnlyList<(string Algorithm, double?[] Values)> seriesData,
         string xAxisName)
@@ -69,6 +70,7 @@ public static class ChartFactory
         }).ToArray();
 
         var xAxis = new Axis { Labels = labels, Name = xAxisName };
-        return (series, new[] { xAxis });
+        var yAxis = new Axis();
+        return (series, new[] { xAxis }, new[] { yAxis });
     }
 }
