@@ -61,7 +61,7 @@ dotnet run --project src/Knapsack.DesktopApp
 
 > A interface é em **WPF**, portanto compila e executa apenas no **Windows**.
 
-A janela é dividida em um painel de parâmetros (à esquerda) e três abas:
+A janela é dividida em um painel de parâmetros (à esquerda) e quatro abas:
 
 - **Instância**: parâmetros para gerar instâncias aleatórias (quantidade de
   itens, faixas de peso/utilidade, modo de capacidade, seed opcional) e botões
@@ -72,12 +72,28 @@ A janela é dividida em um painel de parâmetros (à esquerda) e três abas:
 - **Experimentos / Escalabilidade**: varia o número de itens (n) e plota o
   tempo médio e o erro relativo médio de cada algoritmo, permitindo exportar
   todos os resultados em CSV para `data/results/`.
+- **Testes**: explica o que a suíte de testes verifica e permite executá-la
+  diretamente pela interface, exibindo o resultado e a saída completa.
 
 A UI reaproveita integralmente os algoritmos e a geração de instâncias de
 `Knapsack.Core` e a análise/estatística de `Knapsack.Analysis`. Os gráficos
 usam a biblioteca [LiveCharts2](https://livecharts.dev).
 
 ## Como rodar os testes
+
+Há duas formas:
+
+**1. Pela interface gráfica (recomendado para uso rápido)**
+
+Abra a aba **Testes** e clique em **"Rodar testes"**. A aplicação executa
+`dotnet test` no projeto `Knapsack.Core.Tests` (compilando-o se necessário),
+mostra um resumo (passou/falhou) e a saída completa em uma área de console.
+A primeira execução pode levar alguns segundos por causa da compilação.
+
+> Requer o SDK do .NET instalado na máquina, pois a UI apenas dispara o
+> comando `dotnet test` por baixo.
+
+**2. Pela linha de comando**
 
 ```bash
 cd Code
@@ -86,7 +102,8 @@ dotnet test
 
 Os testes cobrem:
 
-- Casos simples com solução ótima conhecida.
+- Casos simples com solução ótima conhecida (capacidade 50 com itens
+  (10,60), (20,100), (30,120); ótimo = 220).
 - Igualdade entre o algoritmo exato e a programação dinâmica em instâncias pequenas.
 - Garantias da heurística gulosa (respeita capacidade, nunca supera o ótimo, não lança exceções).
 - Validações dos modelos de domínio.

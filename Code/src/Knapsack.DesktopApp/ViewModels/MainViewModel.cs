@@ -7,6 +7,7 @@ using Knapsack.Core.Generation;
 using Knapsack.Core.Models;
 using Knapsack.Core.Solvers;
 using Knapsack.DesktopApp.Charts;
+using Knapsack.DesktopApp.Services;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using Microsoft.Win32;
@@ -67,6 +68,22 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private Axis[] timeVsNXAxes = Array.Empty<Axis>();
     [ObservableProperty] private ISeries[] errorVsNSeries = Array.Empty<ISeries>();
     [ObservableProperty] private Axis[] errorVsNXAxes = Array.Empty<Axis>();
+
+    // --- Testes ---
+    [ObservableProperty] private string testSummary = "Os testes ainda nao foram executados.";
+    [ObservableProperty] private string testOutput = string.Empty;
+
+    /// <summary>Texto explicativo exibido na aba de testes.</summary>
+    public string TestExplanation =>
+        "Os testes automatizados ficam no projeto Knapsack.Core.Tests e usam o framework xUnit. " +
+        "Ao clicar em \"Rodar testes\", a aplicacao executa o comando 'dotnet test' nesse projeto " +
+        "(compilando-o se necessario) e mostra a saida completa abaixo.\n\n" +
+        "O que e verificado:\n" +
+        "  - Caso classico com otimo conhecido: capacidade 50 e itens (10,60),(20,100),(30,120); o otimo deve ser 220.\n" +
+        "  - Equivalencia Exato x Programacao Dinamica: em instancias pequenas aleatorias, a utilidade otima dos dois deve ser identica.\n" +
+        "  - Garantias da heuristica gulosa: sempre respeita a capacidade, nunca supera o otimo e nao lanca excecoes para entradas validas.\n" +
+        "  - Validacoes dos modelos: peso > 0, utilidade >= 0, capacidade > 0, lista de itens nao vazia e Ids sem duplicidade.\n\n" +
+        "Ao final, o resumo indica se todos passaram (codigo de saida 0) ou se houve falhas.";
 
     // --- Estado geral ---
     [ObservableProperty] private string statusMessage = "Pronto.";
@@ -265,6 +282,28 @@ public partial class MainViewModel : ObservableObject
         catch (Exception ex)
         {
             StatusMessage = "Erro ao exportar: " + ex.Message;
+        }
+    }
+
+    [RelayCommand]
+    private async Task RunTestsAsync()
+    {
+        IsBusy = true;
+        TestOutput = string.Empty;
+        TestSummary = "Executando 'dotnet test'... isso pode levar alguns segundos.";
+        StatusMessage = "Rodando testes...";
+        try
+        {
+            var result = await TestRunnerService.RunAsync();
+            TestOutput = result.Output;
+            TestSummary = result.Success
+                ? "Todos os testes passaram."
+                : "Ha testes falhando - veja os detalhes abaixo.";
+            StatusMessage = result.Success ? "Testes concluidos com sucesso." : "Testes concluidos com falhas.";
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 
