@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Mochila 0/1 (WPF)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/Code/src/Knapsack.DesktopApp/bin/Debug/net8.0-windows/Knapsack.DesktopApp.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/Code",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        }
+    ]
+}
