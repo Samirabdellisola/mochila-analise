@@ -5,9 +5,9 @@ using Xunit;
 
 namespace Knapsack.Core.Tests;
 
-public class GreedyHeuristicSolverTests
+public class GreedyApproximationSolverTests
 {
-    private readonly GreedyHeuristicSolver _greedy = new();
+    private readonly GreedyApproximationSolver _greedy = new();
 
     [Fact]
     public void NaoEhMarcadoComoOtimo()
@@ -33,9 +33,49 @@ public class GreedyHeuristicSolverTests
             var optimal = dp.Solve(instance);
 
             Assert.True(greedySolution.TotalWeight <= instance.Capacity);
-            // Heurística nunca pode superar o ótimo.
+            // Aproximação nunca pode superar o ótimo.
             Assert.True(greedySolution.TotalUtility <= optimal.TotalUtility);
         }
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(99)]
+    [InlineData(2026)]
+    public void GarantePeloMenosMetadeDoOtimo(int seed)
+    {
+        var generator = new KnapsackInstanceGenerator(seed);
+        var dp = new DynamicProgrammingSolver();
+
+        for (int n = 1; n <= 25; n++)
+        {
+            var instance = generator.GenerateRandomInstance(n, 1, 40, 1, 60, CapacityMode.Small);
+
+            var greedySolution = _greedy.Solve(instance);
+            var optimal = dp.Solve(instance);
+
+            // Garantia do algoritmo de aproximação (fator 1/2).
+            Assert.True(greedySolution.TotalUtility * 2 >= optimal.TotalUtility,
+                $"n={n}, seed={seed}: guloso={greedySolution.TotalUtility}, otimo={optimal.TotalUtility}");
+        }
+    }
+
+    [Fact]
+    public void SuperaGulosoPuroQuandoUmItemDominaACapacidade()
+    {
+        // Item leve com razão alta mas valor baixo vs. item que enche a mochila com valor alto.
+        var items = new[]
+        {
+            new KnapsackItem(1, 1, 2),    // razão 2.0, valor 2
+            new KnapsackItem(2, 10, 10)   // razão 1.0, valor 10
+        };
+        var instance = new KnapsackInstance(10, items, "dominante");
+
+        var solution = _greedy.Solve(instance);
+
+        // O guloso puro por razão pegaria so o item 1 (valor 2);
+        // a aproximação escolhe o melhor item isolado (valor 10).
+        Assert.Equal(10, solution.TotalUtility);
     }
 
     [Fact]
@@ -52,7 +92,7 @@ public class GreedyHeuristicSolverTests
     public void CriterioDeOrdenacaoConfiguravel()
     {
         // Critério alternativo: maior utilidade absoluta primeiro.
-        var byUtility = new GreedyHeuristicSolver(
+        var byUtility = new GreedyApproximationSolver(
             (a, b) => b.Utility.CompareTo(a.Utility),
             "maior utilidade");
 

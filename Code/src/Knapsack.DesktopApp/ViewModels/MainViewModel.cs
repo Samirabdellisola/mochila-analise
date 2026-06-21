@@ -31,7 +31,7 @@ public partial class MainViewModel : ObservableObject
         {
             new ExactExponentialSolver(),
             new DynamicProgrammingSolver(),
-            new GreedyHeuristicSolver()
+            new GreedyApproximationSolver()
         };
     }
 
@@ -85,7 +85,7 @@ public partial class MainViewModel : ObservableObject
         "O que e verificado:\n" +
         "  - Caso classico com otimo conhecido: capacidade 50 e itens (10,60),(20,100),(30,120); o otimo deve ser 220.\n" +
         "  - Equivalencia Exato x Programacao Dinamica: em instancias pequenas aleatorias, a utilidade otima dos dois deve ser identica.\n" +
-        "  - Garantias da heuristica gulosa: sempre respeita a capacidade, nunca supera o otimo e nao lanca excecoes para entradas validas.\n" +
+        "  - Garantias do guloso de aproximacao: sempre respeita a capacidade, nunca supera o otimo e garante pelo menos 1/2 da utilidade otima.\n" +
         "  - Validacoes dos modelos: peso > 0, utilidade >= 0, capacidade > 0, lista de itens nao vazia e Ids sem duplicidade.\n\n" +
         "Ao final, o resumo indica se todos passaram (codigo de saida 0) ou se houve falhas.";
 

@@ -41,9 +41,12 @@ Todos implementam a interface comum `IKnapsackSolver` e medem o tempo com `Stopw
 - **Programação dinâmica** (`DynamicProgrammingSolver`): tabela 2D
   `dp[i, w]` com a recorrência clássica da mochila 0/1 e reconstrução dos
   itens por backtracking na tabela. Garante o ótimo em tempo O(n·W).
-- **Heurística gulosa** (`GreedyHeuristicSolver`): ordena por razão
-  utilidade/peso (critério configurável) e inclui itens enquanto cabe.
-  Rápida (O(n log n)), porém sem garantia de otimalidade.
+- **Guloso de aproximação** (`GreedyApproximationSolver`): ordena por razão
+  utilidade/peso (critério configurável) e inclui itens enquanto cabe, mas
+  também considera o melhor item isolado que cabe na mochila, devolvendo a
+  melhor das duas soluções. Rápido (O(n log n)) e, ao contrário do guloso
+  puro (que é apenas heurístico e pode ser arbitrariamente ruim), garante
+  pelo menos 1/2 da utilidade ótima.
 
 ## Como compilar
 
@@ -105,5 +108,5 @@ Os testes cobrem:
 - Casos simples com solução ótima conhecida (capacidade 50 com itens
   (10,60), (20,100), (30,120); ótimo = 220).
 - Igualdade entre o algoritmo exato e a programação dinâmica em instâncias pequenas.
-- Garantias da heurística gulosa (respeita capacidade, nunca supera o ótimo, não lança exceções).
+- Garantias do guloso de aproximação (respeita capacidade, nunca supera o ótimo, garante pelo menos 1/2 do ótimo).
 - Validações dos modelos de domínio.

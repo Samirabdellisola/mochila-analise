@@ -22,7 +22,7 @@ public sealed class KnapsackItem
         Utility = utility;
     }
 
-    /// <summary>Razão utilidade/peso, usada pela heurística gulosa.</summary>
+    /// <summary>Razão utilidade/peso, usada pelo guloso de aproximação.</summary>
     public double Ratio => (double)Utility / Weight;
 
     public override string ToString() => $"Item #{Id} (peso={Weight}, util={Utility})";
