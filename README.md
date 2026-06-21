@@ -5,6 +5,23 @@ Solução em C# (.NET 8) para resolver e analisar o problema da **mochila 0/1**
 domínio, análise de experimentos e uma interface gráfica (WPF) para comparar
 os resultados visualmente.
 
+## Como compilar
+
+```bash
+cd Code
+dotnet build
+```
+
+## Como rodar
+
+```bash
+cd Code
+dotnet run --project src/Knapsack.DesktopApp
+```
+> [!WARNING]  
+> Se a aplicação não abrir, o windows pode ter bloquado ela. Segurança do Windows > Controle de aplicativos e navegador > Controle inteligente de aplicativos
+
+
 ## Estrutura
 
 ```
@@ -47,20 +64,7 @@ Todos implementam a interface comum `IKnapsackSolver` e medem o tempo com `Stopw
   melhor das duas soluções. Rápido (O(n log n)) e, ao contrário do guloso
   puro (que é apenas heurístico e pode ser arbitrariamente ruim), garante
   pelo menos 1/2 da utilidade ótima.
-
-## Como compilar
-
-```bash
-cd Code
-dotnet build
-```
-
-## Como rodar
-
-```bash
-cd Code
-dotnet run --project src/Knapsack.DesktopApp
-```
+  
 
 > A interface é em **WPF**, portanto compila e executa apenas no **Windows**.
 
