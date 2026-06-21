@@ -5,22 +5,23 @@ Solução em C# (.NET 8) para resolver e analisar o problema da **mochila 0/1**
 domínio, análise de experimentos e uma interface gráfica (WPF) para comparar
 os resultados visualmente.
 
-## Como compilar
+## Quickstart
 
+### Como Compilar
 ```bash
 cd Code
 dotnet build
 ```
 
-## Como rodar
+### Como rodar
 
 ```bash
 cd Code
 dotnet run --project src/Knapsack.DesktopApp
 ```
 > [!WARNING]  
-> Se a aplicação não abrir, o windows pode ter bloquado ela. Segurança do Windows > Controle de aplicativos e navegador > Controle inteligente de aplicativos
-
+> Se a aplicação não abrir, o windows pode ter bloquado ela. 
+> Segurança do Windows > Controle de aplicativos e navegador > Controle inteligente de aplicativos
 
 ## Estrutura
 
