@@ -20,7 +20,7 @@ cd Code
 dotnet run --project src/Knapsack.DesktopApp
 ```
 > [!WARNING]  
-> Se a aplicação não abrir, o windows pode ter bloquado ela. Segurança do Windows > Controle de aplicativos e navegador > Controle inteligente de aplicativos
+> Se a aplicação não abrir, o windows pode ter bloquado ela. Acesse: Segurança do Windows > Controle de aplicativos e navegador > Controle inteligente de aplicativos
 
 ## Estrutura
 
