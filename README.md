@@ -25,6 +25,10 @@ dotnet run --project src/Knapsack.DesktopApp
 > Se a aplicação não abrir, o windows pode ter bloquado ela. 
 > Acesse: Segurança do Windows > Controle de aplicativos e navegador > Controle inteligente de aplicativos e desabilite.
 
+<img width="1457" height="903" alt="Mochila 0_1 - Analisador 21_06_2026 22_57_46" src="https://github.com/user-attachments/assets/cb0924ff-6da8-47e8-9db7-ed29fd865384" />
+
+
+
 ## Estrutura
 
 ```
